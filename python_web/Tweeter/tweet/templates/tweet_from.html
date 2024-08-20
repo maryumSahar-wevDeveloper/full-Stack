@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+ {% block title %} add Tweet | Page {% endblock %} 
+
+
+
+
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center mt-4">Welcome to Tweeter's Mini Tweet</h1>
+            <h2>{% if form.instance.pk %}
+                Edit Tweet 
+                {% else %}
+                Create Tweet
+                {% endif %}
+
+
+                <form method="post" enctype="multipart/form-data" class="form">
+                    {% csrf_token %}
+                    {{form.as_p}}
+                    <button class="btn btn-warning" type="submit">Submit</button>
+                    <a href="{% url 'tweet_list'%}">Back to Home</a>
+                </form>
+            </h2>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
