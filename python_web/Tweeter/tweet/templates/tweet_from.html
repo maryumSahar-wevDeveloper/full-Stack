@@ -1,32 +1,57 @@
-{% extends "layout.html" %}
- {% block title %} add Tweet | Page {% endblock %} 
-
-
-
+{% extends "layout.html" %} {% block title %} add Tweet | Page {% endblock %} 
 
 
 {% block content %}
 
 <div class="container">
-    <div class="row">
-        <div class="col-md-12">
-            <h1 class="text-center mt-4">Welcome to Tweeter's Mini Tweet</h1>
-            <h2>{% if form.instance.pk %}
-                Edit Tweet 
-                {% else %}
-                Create Tweet
+  <div class="row">
+    <div class="col-md-12">
+      <h1 class="text-center mt-4">Welcome to Tweeter's Mini Tweet</h1>
+      <h2>
+        {% if form.instance.pk %} Edit Tweet {% else %} Create Tweet {% endif %}
+
+        <form method="post" enctype="multipart/form-data" class="form" id="registration-form">
+            {% csrf_token %}
+
+            <div class="form-group mb-3">
+                <label for="id_text" class="mb-2">Text</label>
+                <textarea
+                    name="text"
+                    id="id_text"
+                    class="form-control"
+                    rows="5"
+                >{{ form.text.value|default_if_none:"" }}</textarea>
+                {% if form.text.errors %}
+                <div class="text-danger">{{ form.text.errors.as_text }}</div>
                 {% endif %}
-
-
-                <form method="post" enctype="multipart/form-data" class="form">
-                    {% csrf_token %}
-                    {{form.as_p}}
-                    <button class="btn btn-warning" type="submit">Submit</button>
-                    <a href="{% url 'tweet_list'%}">Back to Home</a>
-                </form>
-            </h2>
-        </div>
+            </div>
+            <div class="form-group mb-3">
+                <label for="id_image" class="mb-2">Image</label>
+                <input
+                    type="file"
+                    name="image"
+                    id="id_image"
+                    class="form-control"
+                />
+                {% if form.instance.image %}
+                    <div class="mb-3">
+                        <img src="{{ form.instance.image.url }}" alt="Current image" class="img-fluid">
+                    </div>
+                {% endif %}
+                {% if form.image.errors %}
+                <div class="text-danger">{{ form.image.errors.as_text }}</div>
+                {% endif %}
+            </div>
+        
+            <button class="btn btn-warning" type="submit">
+                {% if is_edit %}Update Tweet{% else %}Tweet Now{% endif %}
+            </button>
+            <a href="{% url 'tweet_list' %}" class="btn btn-secondary">Back to Home</a>
+        </form>
+        
+      </h2>
     </div>
+  </div>
 </div>
 
 {% endblock %}

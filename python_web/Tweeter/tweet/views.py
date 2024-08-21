@@ -25,7 +25,7 @@ def tweet_create(request):
          return redirect('tweet_list')
     else:
        form = TweetForm()
-    return render(request, 'tweet_from.html', {'form': form})
+    return render(request, 'tweet_from.html', {'form': form, 'is_edit': False})
 
 @login_required
 def tweet_edit(request, tweet_id):
@@ -39,7 +39,7 @@ def tweet_edit(request, tweet_id):
         return redirect('tweet_list')
    else:
       form = TweetForm(instance=tweet)
-   return render(request, 'tweet_from.html', {'form': form})   
+   return render(request, 'tweet_from.html', {'form': form, 'is_edit': True})   
 
 @login_required
 def tweet_delete(request, tweet_id):
@@ -51,9 +51,10 @@ def tweet_delete(request, tweet_id):
   
 
 def register(request):
-   
+   form_submitted = False
    if request.method == 'POST':
     form = UserRegistrationForm(request.POST)
+    form_submitted = True
     if form.is_valid():
        user = form.save(commit=False)
        user.set_password(form.cleaned_data['password1'])
@@ -62,4 +63,4 @@ def register(request):
        return redirect('tweet_list')
    else:
       form = UserRegistrationForm()
-   return render(request, 'registration/register.html', {'from': form})
+   return render(request, 'registration/register.html', {'form': form, 'form_submitted': form_submitted})
